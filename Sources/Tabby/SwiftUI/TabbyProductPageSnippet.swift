@@ -14,12 +14,13 @@ public struct TabbyProductPageSnippet: View {
     
     private let analyticsService = AnalyticsService.shared
     
-    func toggleOpen() -> Void {
+    func toggleOpen() {
         isOpened.toggle()
     }
     
     let amount: Double
     let currency: Currency
+    let isPrivacyEnabled: Bool
     let withCurrencyInArabic: Bool
     
     private let installmentsCount = 4
@@ -30,6 +31,7 @@ public struct TabbyProductPageSnippet: View {
     
     private var pageURL: String {
         let baseURL = isRTL ? WebViewBaseURL.Tabby.ar : WebViewBaseURL.Tabby.en
+        if isPrivacyEnabled { return "\(baseURL)?currency=\(currency.rawValue)&source=sdk" }
         return "\(baseURL)?price=\(amount)&currency=\(currency.rawValue)&source=sdk"
     }
     
@@ -37,16 +39,22 @@ public struct TabbyProductPageSnippet: View {
         isRTL ? .ar : .en
     }
     
-    public init(amount: Double, currency: Currency, preferCurrencyInArabic: Bool? = nil) {
+    public init(
+        amount: Double,
+        currency: Currency,
+        isPrivacyEnabled: Bool = false,
+        preferCurrencyInArabic: Bool? = nil
+    ) {
         self.amount = amount
         self.currency = currency
+        self.isPrivacyEnabled = isPrivacyEnabled
         self.withCurrencyInArabic = preferCurrencyInArabic ?? false
     }
     
     public var body: some View {
         let textNode1 = String(format: "snippetTitle1".localized)
-        let textNode2 = String(format: "snippetAmount".localized, "\((amount/Double(installmentsCount)).withFormattedAmount)", "\(currency.localized(l: withCurrencyInArabic && isRTL ? .ar : nil))")
-        let textNode3 =  String(format: "snippetTitle2".localized)
+        let textNode2 = String(format: "snippetAmount".localized, "\(isPrivacyEnabled ? "" : (amount / Double(installmentsCount)).withFormattedAmount)", "\(currency.localized(l: withCurrencyInArabic && isRTL ? .ar : nil))")
+        let textNode3 = String(format: "snippetTitle2".localized)
         
         let learnMoreText = String(format: "learnMore".localized)
         
@@ -56,15 +64,13 @@ public struct TabbyProductPageSnippet: View {
                     VStack(alignment: .leading) {
                         Text(textNode1)
                             .tabbyStyle(.interBody)
-                        + Text(textNode2)
+                            + Text(textNode2)
                             .tabbyStyle(.interBodyBold)
-                        + Text(textNode3)
+                            + Text(textNode3)
                             .tabbyStyle(.interBody)
-                        + Text(learnMoreText)
+                            + Text(learnMoreText)
                             .tabbyStyle(.interBody)
-                        
                             .underline()
-                        
                     }
                     .frame(minWidth: 0,
                            maxWidth: .infinity,
@@ -104,7 +110,6 @@ public struct TabbyProductPageSnippet: View {
     }
 }
 
-
 // MARK: - PREVIEW
 
 @available(iOS 14.0, macOS 11, *)
@@ -113,7 +118,7 @@ struct TabbyProductPageSnippet_Previews: PreviewProvider {
         VStack {
             TabbyProductPageSnippet(amount: 1990, currency: .QAR)
             
-            TabbyProductPageSnippet(amount: 1990, currency: .AED)
+            TabbyProductPageSnippet(amount: 1990, currency: .AED, isPrivacyEnabled: true)
             
             TabbyProductPageSnippet(amount: 1990, currency: .QAR)
                 .environment(\.layoutDirection, .rightToLeft)
