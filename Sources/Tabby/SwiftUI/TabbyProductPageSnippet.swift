@@ -31,7 +31,7 @@ public struct TabbyProductPageSnippet: View {
     
     private var pageURL: String {
         let baseURL = isRTL ? WebViewBaseURL.Tabby.ar : WebViewBaseURL.Tabby.en
-        if isPrivacyEnabled { return "\(baseURL)?currency=\(currency.rawValue)&source=sdk" }
+        if isPrivacyEnabled { return "\(baseURL)?currency=\(currency.rawValue)&source=sdk&installmentsCount=0" }
         return "\(baseURL)?price=\(amount)&currency=\(currency.rawValue)&source=sdk"
     }
     
@@ -124,7 +124,7 @@ struct TabbyProductPageSnippet_Previews: PreviewProvider {
                 .environment(\.layoutDirection, .rightToLeft)
                 .environment(\.locale, Locale(identifier: "ar"))
             
-            TabbyProductPageSnippet(amount: 1990, currency: .SAR, preferCurrencyInArabic: true)
+          TabbyProductPageSnippet(amount: 1990, currency: .SAR, isPrivacyEnabled: true, preferCurrencyInArabic: true)
                 .environment(\.layoutDirection, .rightToLeft)
                 .environment(\.locale, Locale(identifier: "ar"))
         }
