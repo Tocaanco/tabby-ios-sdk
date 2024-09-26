@@ -52,11 +52,17 @@ public struct TabbyProductPageSnippet: View {
     }
     
     public var body: some View {
-        let textNode1 = String(format: "snippetTitle1".localized)
+      let textNodeAr = "أو قسّمها على 4 دفعات شهرية بقيمة "
+      let textNodeEn = "or 4 interest-free payments of "
+      let textNode1 = isRTL ? textNodeAr:textNodeEn
+      
         let textNode2 = String(format: "snippetAmount".localized, "\(isPrivacyEnabled ? "" : (amount / Double(installmentsCount)).withFormattedAmount)", "\(currency.localized(l: withCurrencyInArabic && isRTL ? .ar : nil))")
         let textNode3 = String(format: "snippetTitle2".localized)
         
-        let learnMoreText = String(format: "learnMore".localized)
+      let learnMoreAr = "لمعرفة المزيد"
+      let learnMoreEn = "Learn more"
+
+      let learnMoreText = isRTL ? learnMoreAr:learnMoreEn
         
         return ZStack {
             VStack(alignment: .leading) {

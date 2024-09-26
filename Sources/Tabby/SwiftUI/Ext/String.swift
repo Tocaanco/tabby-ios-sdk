@@ -13,4 +13,9 @@ public extension String {
   var localized: String {
     NSLocalizedString(self, bundle: TabbySdkBundle, comment: "")
   }
+  
+  var key: LocalizedStringKey {
+    LocalizedStringKey(self)
+  }
+
 }
